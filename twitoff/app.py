@@ -1,40 +1,52 @@
-from flask import Flask, render_template
+from decouple import config
+from flask import Flask, render_template, request
 from .models import DB, User, Tweet
-from random import sample
+from .twitter import add_or_update_user
+from .predict import predict_user
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     DB.init_app(app)
 
     @app.route("/")
     def index():
-        username = sample(user_list, 1)[0]
-        tweet = Tweet(text=(sample(tweet_list, 1)[0]))
-        if DB.session.query(User.query.filter(User.name==username).exists()).scalar()==False:
-            user = User(name=username)
-        else:
-            user = User.query.filter_by(name=username).first()
-            pass
-        
-        user.tweets.append(tweet)
-        DB.session.add(user)
-        DB.session.commit()
-        return "Index Page"
+        DB.create_all()
+        return render_template('base.html', title="Welcome to TwitOff", users=User.query.all())
+
+    @app.route('/predict', methods=['POST'])
+    def predict(user1=None, user2=None, tweet=None, message=''):
+        u1 = request.values['u1']
+        u2 = request.values['u2']
+        tweet = request.values['tweet']
+        udict = {1:u1, 0:u2}
+        try:
+            pred = predict_user(u1, u2, tweet)[0]
+            message = f'It is more likely that {udict[pred]} posted this tweet'
+        except Exception as e:
+            message = f'Error while predicting: {e}'
+        return render_template('predict.html', m=message, u1=u1, u2=u2, tweet=tweet)
+            
     
-    @app.route('/hello')
-    def hello():
-        return render_template('base.html', title='hello')
+    @app.route('/user', methods=['POST'])
+    @app.route('/user/<name>', methods=['GET'])
+    def user(name=None, message=''):
+        name = name or request.values['username']
+        try:
+            if request.method == 'POST':
+                add_or_update_user(name)
+                message = f'User {name} successfully added!'
+            tweets = User.query.filter(User.name==name).one().tweets
+        except Exception as e:
+            message = f'Error while trying to add user {name}: {e}'
+            tweets = []
+        return render_template('user.html', title=name, message=message, tweets=tweets)
+
+    @app.route('/reset')
+    def reset():
+        DB.drop_all()
+        DB.create_all()
+        return render_template('reset.html')
     
     return app
-
-user_list = ['elonmusk', 'yourmom', 'shrek', 'steve']
-
-tweet_list = [
-    'today is a good day',
-    'my head hurts',
-    'I want to go home',
-    'get out of my swamp',
-    'party?',
-    'Cybertruck lol'
-]

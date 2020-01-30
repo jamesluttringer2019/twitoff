@@ -6,8 +6,12 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+scikit-learn = "*"
 flask = "*"
 flask-sqlalchemy = "*"
+basilica = "*"
+tweepy = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.7"

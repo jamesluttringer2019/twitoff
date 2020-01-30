@@ -1,0 +1,104 @@
+* {
+    list-style-type: none;
+}
+
+*:focus{
+    outline:none;
+}
+header {
+    height: 50px;
+    background: rgb(0, 152, 240);
+    display: flex;
+    justify-content: center;
+}
+
+div {
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    text-align:center;
+    }
+
+select {
+    width:40%;
+    height:30px;
+    border: 2px solid rgb(0, 152, 240);
+    border-radius: 10px;
+    
+    }
+
+h1 {
+    color:rgb(0, 152, 240);
+    text-align: center;
+}
+a {
+    color:rgb(0, 152, 240)
+}
+a:visited {
+    color:rgb(0, 152, 240)
+}
+.topnav a {
+    color: white;
+    font-size: 30pt;
+    margin: 0px 25px;
+}
+.btn {
+    margin:20px 0px;
+    width:50%;
+    height:40px;
+    background:rgb(0, 152, 240);
+    color:white;
+    border-radius:10px;
+    border:1px solid rgb(55, 169, 235);
+    
+    }
+.btn:hover {
+    background: rgb(55, 169, 235);
+}
+#main{
+    flex-direction: row;
+}
+#leftdiv {
+    zoom:1.50;
+}
+
+#rightdiv {
+    text-align:right;
+    zoom: 1.5;
+}
+#rightdiv h1 {
+    text-align: right;
+}
+#tweet {
+    width:90%;
+    height:60px;
+    border:2px solid rgb(0, 152, 240);
+    border-radius:25px;
+    padding:5px 6px;
+    }
+
+#drop {
+    flex-direction:row;
+    margin:10px;
+    }
+
+#userIn {
+    width: 50%;
+    border:2px solid rgb(0, 152, 240);
+    border-radius: 8px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+#user-info {
+    text-align: left;
+}
+
+#userHead {
+    text-align: left;
+}
+
+#predBody {
+    flex-direction:column;
+    text-align: center;
+}

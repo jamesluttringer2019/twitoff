@@ -1,10 +1,54 @@
+<!DOCTYPE html>
 <html>
-    <head>
+<head>
+    <link rel="stylesheet" type="text/css" href="../static/css/styles.css"/>
+    <title>Twitoff - {{title}}</title>
+</head>
 
-        <title>Twitoff - {{title}}</title>
-    </head>
-
-    <body>
-        <h1> Content goes here! </h1>
-    </body>
+<header class="topnav">
+    <a href="/"> Home </a>
+    <br>
+    <a href="/reset"> Reset </a>
+</header>
+<div id="main">
+<body>
+    {% block content %}
+    <div id="leftdiv">
+        <div>
+            <h1> Who said it? </h1>
+            <p> Enter a tweet below and pick two users,
+                to predict which one is more likely to have
+                made that tweet. </p>
+        </div>
+        <form id="predForm" action="/predict" method="post">
+            <div id="drop">  
+                <select name="u1">
+                    {% for user in users %}
+                    <option value="{{ user.name }}">{{ user.name }}</option>
+                    {% endfor %}
+                </select> 
+                <select name="u2">
+                    {% for user in users %}
+                    <option value="{{ user.name }}">{{ user.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <textarea id="tweet" name="tweet" maxlength="280"></textarea>
+            <input class="btn" type="submit", value="Predict"/>
+        </form>
+    </div>
+    <div id="rightdiv">
+        <h1> Twitter Users </h1>
+        {% for user in users %}
+        <a href="user/{{ user.name }}">{{ user.name }}</a>
+        {% endfor %}
+    
+        <form action="/user" method="post">
+            <input id="userIn" type="text" name="username" placeholder="User to add"/>
+            <input class="btn" type="submit" value="Add User"/>
+        </form>
+    </div>
+    {% endblock %}
+</body>
+</div>
 </html>
